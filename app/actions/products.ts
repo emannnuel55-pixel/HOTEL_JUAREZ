@@ -5,8 +5,8 @@ import { requireUser } from "@/lib/auth";
 import { productSchema } from "@/lib/validation";
 import { inventoryRoles } from "@/lib/permissions";
 import { recordAudit } from "@/lib/audit";
-import { InventoryMovementType } from "@/generated/prisma";
-import type { Prisma } from "@/generated/prisma/client";
+import { InventoryMovementType } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 export async function createProduct(formData: FormData) {
   const user = await requireUser(inventoryRoles);

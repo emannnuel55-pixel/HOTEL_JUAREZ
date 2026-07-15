@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { hash } from "@node-rs/argon2";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 import { recordAudit } from "@/lib/audit";
 
 const administrativeRoles: Role[] = [Role.OWNER, Role.ADMIN];

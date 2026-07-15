@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { AppLogo } from "@/components/AppLogo";
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 type NavigationItem = {

@@ -10,8 +10,8 @@ import { repairSchema } from "@/lib/validation";
 import { createFolio } from "@/lib/folio";
 import { recordAudit } from "@/lib/audit";
 import { requiredEnv } from "@/lib/env";
-import { RepairStatus } from "@/generated/prisma";
-import type { Prisma } from "@/generated/prisma/client";
+import { RepairStatus } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { repairWriteRoles } from "@/lib/permissions";
 
 export async function createRepair(formData: FormData) {

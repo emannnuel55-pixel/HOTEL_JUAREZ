@@ -6,8 +6,8 @@ import { salesRoles } from "@/lib/permissions";
 import { calculateSale } from "@/lib/money";
 import { createFolio } from "@/lib/folio";
 import { recordAudit } from "@/lib/audit";
-import { InventoryMovementType, PaymentMethod } from "@/generated/prisma";
-import type { Prisma } from "@/generated/prisma/client";
+import { InventoryMovementType, PaymentMethod } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 const schema = z.object({
   idempotencyKey: z.string().uuid(),

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { RepairStatus } from "@/generated/prisma";
+import { RepairStatus } from "@prisma/client";
 import { canTransition } from "@/lib/repair-state";
 
 describe("máquina de estados", () => {

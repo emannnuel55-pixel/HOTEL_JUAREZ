@@ -6,8 +6,8 @@ import { requireUser } from "@/lib/auth";
 import { requireClientOrder } from "@/lib/customer-auth";
 import { canTransition } from "@/lib/repair-state";
 import { recordAudit } from "@/lib/audit";
-import { EstimateStatus, MessageSenderType, RepairStatus, Role } from "@/generated/prisma";
-import type { Prisma } from "@/generated/prisma/client";
+import { EstimateStatus, MessageSenderType, RepairStatus, Role } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { repairWriteRoles } from "@/lib/permissions";
 
 export async function addRepairUpdate(orderId: string, formData: FormData) {

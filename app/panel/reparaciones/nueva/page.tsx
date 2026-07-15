@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createRepair } from "@/app/actions/repairs";
 import { db } from "@/lib/db";
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 import { requireUser } from "@/lib/auth";
 import { repairWriteRoles } from "@/lib/permissions";
 import { PhoneAutocomplete } from "@/components/PhoneAutocomplete";

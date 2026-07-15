@@ -1,6 +1,6 @@
 import { createUser, resetUserPassword, updateUserRole, toggleUserStatus } from "@/app/actions/users";
 import { db } from "@/lib/db";
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 import { requireUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";

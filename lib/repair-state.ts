@@ -1,4 +1,4 @@
-import { RepairStatus } from "@/generated/prisma";
+import { RepairStatus } from "@prisma/client";
 
 export const repairStatusLabels: Record<RepairStatus, string> = {
   RECEIVED: "Reservación recibida",

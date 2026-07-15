@@ -1,4 +1,4 @@
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 
 export const panelRoles = Object.values(Role);
 export const customerWriteRoles: Role[] = [Role.OWNER, Role.ADMIN, Role.MANAGER, Role.RECEPTION, Role.SALES];

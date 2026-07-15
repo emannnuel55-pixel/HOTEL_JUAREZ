@@ -5,7 +5,7 @@ import { allowedTransitions, repairStatusLabels } from "@/lib/repair-state";
 import { addRepairUpdate, createEstimate, sendStaffMessage, reassignTechnician } from "@/app/actions/repair-details";
 import { regenerateClientAccess, revokeClientAccess, updateRepair, deleteRepair } from "@/app/actions/repairs";
 import { IssuedCode } from "@/components/IssuedCode";
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 

@@ -5,7 +5,7 @@ import { createClientSession } from "@/lib/customer-auth";
 import { hmacAccessCode, normalizeAccessCode, sha256, verifyPassword } from "@/lib/security";
 import { isAccessCodeShape } from "@/lib/access-code";
 import { recordAudit } from "@/lib/audit";
-import { RepairStatus } from "@/generated/prisma";
+import { RepairStatus } from "@prisma/client";
 
 function getAbsoluteUrl(targetPath: string, request: Request): URL {
   const host = request.headers.get("x-forwarded-host") || request.headers.get("host") || "localhost:8080";

@@ -2,7 +2,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { randomToken, sha256 } from "@/lib/security";
-import type { Role } from "@/generated/prisma";
+import type { Role } from "@prisma/client";
 
 const COOKIE = "pvc_session";
 const MAX_AGE_SECONDS = 60 * 60 * 12;

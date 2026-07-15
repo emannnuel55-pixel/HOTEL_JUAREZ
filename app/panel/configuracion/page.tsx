@@ -1,7 +1,7 @@
 import { saveSettings } from "@/app/actions/settings";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 

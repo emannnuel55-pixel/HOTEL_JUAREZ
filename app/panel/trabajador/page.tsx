@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ClipboardCheck, Clock3, MessageSquareText, PackageSearch, Smartphone, Wrench } from "lucide-react";
-import type { Prisma } from "@/generated/prisma/client";
-import { Role, RepairStatus } from "@/generated/prisma";
+import type { Prisma } from "@prisma/client";
+import { Role, RepairStatus } from "@prisma/client";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { repairStatusLabels } from "@/lib/repair-state";

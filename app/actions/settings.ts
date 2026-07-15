@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 import { recordAudit } from "@/lib/audit";
 
 export async function saveSettings(formData:FormData){

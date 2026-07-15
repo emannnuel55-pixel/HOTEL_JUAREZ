@@ -10,7 +10,7 @@ import {
   UsersRound,
   Wrench,
 } from "lucide-react";
-import { Role, RepairStatus } from "@/generated/prisma";
+import { Role, RepairStatus } from "@prisma/client";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatMoney } from "@/lib/money";

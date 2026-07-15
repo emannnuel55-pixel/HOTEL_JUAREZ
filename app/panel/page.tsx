@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 import { requireUser } from "@/lib/auth";
 
 const adminRoles: Role[] = [Role.OWNER, Role.ADMIN, Role.MANAGER];

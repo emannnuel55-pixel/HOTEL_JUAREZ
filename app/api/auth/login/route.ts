@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Role } from "@/generated/prisma";
+import { Role } from "@prisma/client";
 import { db } from "@/lib/db";
 import { loginSchema } from "@/lib/validation";
 import { verifyPassword } from "@/lib/security";
