@@ -17,5 +17,5 @@ export function requiredEnv(name: "DATABASE_URL" | "SESSION_SECRET" | "ACCESS_CO
   return value;
 }
 
-export const appName = process.env.NEXT_PUBLIC_APP_NAME || "PUNTO DE VENTA CELULARES";
+export const appName = process.env.NEXT_PUBLIC_APP_NAME || "LINOEM HOTEL";
 export const companyName = process.env.NEXT_PUBLIC_COMPANY_NAME || "LINOEM DEVELOPMENT";
