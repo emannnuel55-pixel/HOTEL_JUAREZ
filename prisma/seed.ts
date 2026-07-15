@@ -1,12 +1,12 @@
 
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client";
-import { Role, RepairStatus, MessageSenderType, InventoryMovementType } from "../generated/prisma/enums";
+import { PrismaClient } from "@prisma/client";
+import { Role, RepairStatus, MessageSenderType, InventoryMovementType } from "@prisma/client";
 import { hash } from "@node-rs/argon2";
 import { createHmac } from "node:crypto";
 
-if (process.env.NODE_ENV === "production" || process.env.ALLOW_DEMO_SEED !== "true") {
-  throw new Error("Seed demo bloqueado. Usa ALLOW_DEMO_SEED=true solamente en desarrollo.");
+if (process.env.ALLOW_DEMO_SEED !== "true") {
+  throw new Error("Seed demo bloqueado. Usa la variable ALLOW_DEMO_SEED=true para habilitarlo.");
 }
 if (!process.env.DATABASE_URL) throw new Error("Falta DATABASE_URL");
 const accessSecret = process.env.ACCESS_CODE_SECRET || "demo-access-code-secret-local-solamente-no-produccion-1234567890";
