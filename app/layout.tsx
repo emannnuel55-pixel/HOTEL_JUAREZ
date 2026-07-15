@@ -1,1 +1,24 @@
-import "./globals.css";export const metadata={title:"LINOEM Hotel | Reservaciones",description:"Experiencias memorables, reservaciones seguras."};export default function Layout({children}:{children:React.ReactNode}){return <html lang="es"><body><div className="bg-container"><div className="bg-blob bg-blob-1"></div><div className="bg-blob bg-blob-2"></div><div className="bg-blob bg-blob-3"></div></div>{children}</body></html>}
+import type { Metadata } from "next";
+import "./globals.css";
+import { appName, companyName } from "@/lib/env";
+import { cookies } from "next/headers";
+
+export const metadata: Metadata = {
+  title: { default: `${appName} | ${companyName}`, template: `%s | ${appName}` },
+  description: "Punto de venta, inventario y administración de reparaciones de celulares.",
+  icons: { icon: "/icon.png" }
+};
+
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("pvc_theme")?.value || "dark";
+  const themeClass = theme === "light" ? "light-theme" : "";
+  
+  return (
+    <html lang="es" className={themeClass}>
+      <body className={themeClass}>
+        {children}
+      </body>
+    </html>
+  );
+}

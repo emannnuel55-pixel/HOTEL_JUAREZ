@@ -1,1 +1,17 @@
-export default function Home(){return <><nav className="nav"><div className="brand">LINOEM HOTEL</div><a className="btn outline" href="/login">Iniciar sesión</a></nav><main className="hero"><div><div className="gold">HOSPITALIDAD · CONFORT · DISTINCIÓN</div><h1>Tu próxima historia comienza <span className="gold">aquí.</span></h1><p>Consulta habitaciones, administra tus reservaciones y disfruta una atención personalizada desde un portal seguro.</p><a className="btn" href="/registro">Crear mi cuenta</a><a className="btn outline" href="/login">Ya tengo cuenta</a></div></main></>}
+import { ClientAppShell } from "@/components/ClientAppShell";
+import { db } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const products = await db.product.findMany({
+    where: { active: true },
+    take: 24,
+    orderBy: { createdAt: "desc" }
+  });
+
+  const settingsList = await db.systemSetting.findMany();
+  const settings = Object.fromEntries(settingsList.map((s) => [s.key, s.value]));
+
+  return <ClientAppShell products={products} settings={settings} />;
+}

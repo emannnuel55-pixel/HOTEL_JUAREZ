@@ -1,0 +1,63 @@
+import { RepairStatus } from "@/generated/prisma";
+
+export const repairStatusLabels: Record<RepairStatus, string> = {
+  RECEIVED: "Reservación recibida",
+  PENDING_DIAGNOSIS: "Pendiente de confirmación",
+  DIAGNOSING: "Reservación confirmada",
+  WAITING_ESTIMATE: "Preparación de habitación",
+  ESTIMATE_SENT: "Detalle de estancia listo",
+  WAITING_CUSTOMER_APPROVAL: "Esperando aceptación del huésped",
+  AUTHORIZED: "Check-In Autorizado",
+  NOT_AUTHORIZED: "Check-In Denegado",
+  WAITING_PART: "Esperando asignación",
+  PART_AVAILABLE: "Habitación lista",
+  REPAIRING: "Huésped Hospedado (Check-In)",
+  TESTING: "Preparación de Check-Out",
+  COMPLETED: "Estancia completada",
+  NOT_VIABLE: "Reservación no viable",
+  PAYMENT_PENDING: "Pendiente de pago",
+  READY_FOR_DELIVERY: "Listo para Check-Out",
+  DELIVERED: "Check-Out Completado (Salida)",
+  WARRANTY: "Post-estancia / Reclamos",
+  CANCELLED: "Cancelada",
+  ABANDONED: "No-Show (No presentado)"
+};
+
+export const allowedTransitions: Record<RepairStatus, RepairStatus[]> = {
+  RECEIVED: [RepairStatus.PENDING_DIAGNOSIS, RepairStatus.CANCELLED, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  PENDING_DIAGNOSIS: [RepairStatus.DIAGNOSING, RepairStatus.CANCELLED, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  DIAGNOSING: [RepairStatus.WAITING_ESTIMATE, RepairStatus.NOT_VIABLE, RepairStatus.CANCELLED, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  WAITING_ESTIMATE: [RepairStatus.ESTIMATE_SENT, RepairStatus.CANCELLED, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  ESTIMATE_SENT: [RepairStatus.WAITING_CUSTOMER_APPROVAL, RepairStatus.CANCELLED, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  WAITING_CUSTOMER_APPROVAL: [RepairStatus.AUTHORIZED, RepairStatus.NOT_AUTHORIZED, RepairStatus.CANCELLED, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  AUTHORIZED: [RepairStatus.WAITING_PART, RepairStatus.PART_AVAILABLE, RepairStatus.REPAIRING, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  NOT_AUTHORIZED: [RepairStatus.READY_FOR_DELIVERY, RepairStatus.CANCELLED, RepairStatus.COMPLETED],
+  WAITING_PART: [RepairStatus.PART_AVAILABLE, RepairStatus.CANCELLED, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  PART_AVAILABLE: [RepairStatus.REPAIRING, RepairStatus.CANCELLED, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  REPAIRING: [RepairStatus.TESTING, RepairStatus.NOT_VIABLE, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  TESTING: [RepairStatus.COMPLETED, RepairStatus.REPAIRING, RepairStatus.NOT_VIABLE, RepairStatus.READY_FOR_DELIVERY],
+  COMPLETED: [RepairStatus.PAYMENT_PENDING, RepairStatus.READY_FOR_DELIVERY],
+  NOT_VIABLE: [RepairStatus.READY_FOR_DELIVERY, RepairStatus.CANCELLED, RepairStatus.COMPLETED],
+  PAYMENT_PENDING: [RepairStatus.READY_FOR_DELIVERY],
+  READY_FOR_DELIVERY: [RepairStatus.DELIVERED, RepairStatus.WARRANTY],
+  DELIVERED: [RepairStatus.WARRANTY],
+  WARRANTY: [RepairStatus.DIAGNOSING, RepairStatus.REPAIRING, RepairStatus.TESTING, RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED],
+  CANCELLED: [],
+  ABANDONED: [RepairStatus.READY_FOR_DELIVERY, RepairStatus.COMPLETED]
+};
+
+export function canTransition(from: RepairStatus, to: RepairStatus) {
+  return from === to || allowedTransitions[from].includes(to);
+}
+
+export function statusProgress(status: RepairStatus) {
+  const progress: Partial<Record<RepairStatus, number>> = {
+    RECEIVED: 5, PENDING_DIAGNOSIS: 10, DIAGNOSING: 20, WAITING_ESTIMATE: 28,
+    ESTIMATE_SENT: 32, WAITING_CUSTOMER_APPROVAL: 35, AUTHORIZED: 45,
+    WAITING_PART: 48, PART_AVAILABLE: 55, REPAIRING: 68, TESTING: 82,
+    COMPLETED: 90, PAYMENT_PENDING: 93, READY_FOR_DELIVERY: 97, DELIVERED: 100,
+    NOT_AUTHORIZED: 40, NOT_VIABLE: 60, WARRANTY: 30, CANCELLED: 0, ABANDONED: 80
+  };
+  return progress[status] ?? 0;
+}
+

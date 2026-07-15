@@ -1,2 +1,67 @@
-import {NextResponse} from "next/server";import {verify} from "@node-rs/argon2";import {db} from "@/lib/db";import {createSession} from "@/lib/auth";
-export async function POST(r:Request){const {email,password}=await r.json();const u=await db.user.findUnique({where:{email:String(email).trim().toLowerCase()}});if(!u?.passwordHash||!u.active||!(await verify(u.passwordHash,String(password))))return NextResponse.json({error:"Correo o contraseña incorrectos."},{status:401});if(!u.emailVerifiedAt)return NextResponse.json({error:"Primero verifica tu correo electrónico."},{status:403});await createSession(u.id);return NextResponse.json({ok:true});}
+import { NextResponse } from "next/server";
+import { Role } from "@/generated/prisma";
+import { db } from "@/lib/db";
+import { loginSchema } from "@/lib/validation";
+import { verifyPassword } from "@/lib/security";
+import { createEmployeeSession } from "@/lib/auth";
+import { recordAudit } from "@/lib/audit";
+
+const adminRoles: Role[] = [Role.OWNER, Role.ADMIN, Role.MANAGER];
+
+function getAbsoluteUrl(targetPath: string, request: Request): URL {
+  const host = request.headers.get("x-forwarded-host") || request.headers.get("host") || "localhost:8080";
+  const proto = request.headers.get("x-forwarded-proto") || "https";
+  return new URL(targetPath, `${proto}://${host}`);
+}
+
+function redirectToLogin(request: Request, error: "credentials" | "setup" | "server") {
+  return NextResponse.redirect(getAbsoluteUrl(`/login?error=${error}`, request), 303);
+}
+
+export async function POST(request: Request) {
+  try {
+    const form = await request.formData();
+    const data = loginSchema.parse(Object.fromEntries(form));
+    const user = await db.user.findUnique({ where: { email: data.email } });
+
+    if (!user) {
+      const usersRegistered = await db.user.count();
+      if (usersRegistered === 0) return redirectToLogin(request, "setup");
+
+      await recordAudit({
+        action: "LOGIN_FAILED",
+        entityType: "User",
+        result: "DENIED",
+        metadata: { email: data.email, reason: "USER_NOT_FOUND" },
+      });
+      return redirectToLogin(request, "credentials");
+    }
+
+    const validPassword = user.active && (await verifyPassword(user.passwordHash, data.password));
+    if (!validPassword) {
+      await recordAudit({
+        action: "LOGIN_FAILED",
+        entityType: "User",
+        entityId: user.id,
+        result: "DENIED",
+        metadata: { email: data.email, reason: user.active ? "INVALID_PASSWORD" : "INACTIVE_USER" },
+      });
+      return redirectToLogin(request, "credentials");
+    }
+
+    await createEmployeeSession(user.id);
+    await recordAudit({
+      actorUserId: user.id,
+      action: "LOGIN_SUCCESS",
+      entityType: "User",
+      entityId: user.id,
+    });
+
+    const target = adminRoles.includes(user.role) ? "/panel/administrador" : "/panel/trabajador";
+    return NextResponse.redirect(getAbsoluteUrl(target, request), 303);
+  } catch (error) {
+    console.error("Employee login error:", error);
+    return redirectToLogin(request, "server");
+  }
+}
+
